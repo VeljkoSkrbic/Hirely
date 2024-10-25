@@ -1,0 +1,74 @@
+version: '3'
+services:
+  # frontend:
+  #   container_name: frontend
+  #   build: ./frontend
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #   ports:
+  #     - "3000:3000"
+  #   restart: always
+
+  jobs:
+    container_name: jobs_api
+    build: ./backend/jobs
+    volumes:
+      - ./backend/jobs:/usr/src/app
+    ports:
+      - "5000:5000"
+    restart: always
+    depends_on:
+      - jobs_db
+    networks:
+      - app_network
+
+  users:
+    container_name: users_api
+    build: ./backend/users
+    volumes:
+      - ./backend/users:/usr/src/app
+    ports:
+      - "5001:5001"
+    restart: always
+    depends_on:
+      - users_db
+
+  jobs_db:
+    container_name: jobs_db
+    image: mysql
+    restart: always
+    volumes:
+      - ./data/jobs:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: jobs
+      MYSQL_DATABASE: jobs
+    command: --pid-file=/var/lib/mysql/mysql.pid
+
+  users_db:
+    container_name: users_db
+    image: mysql
+    restart: always
+    volumes:
+      - ./data/users:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: users
+      MYSQL_DATABASE: users
+    command: --pid-file=/var/lib/mysql/mysql.pid
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management console
+      - "5552:5552"   # Streams
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

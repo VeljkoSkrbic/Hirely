@@ -1,0 +1,24 @@
+{
+  "name": "jobs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "send": "node ./rabbitMQ/send.js",
+    "receive": "node ./rabbitMQ/receive.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "mysql2": "^3.11.3",
+    "rabbitmq-stream-js-client": "^0.4.2",
+    "sequelize": "^6.37.4"
+  },
+  "description": "",
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  }
+}
